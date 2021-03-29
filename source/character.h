@@ -16,6 +16,9 @@ class Character {
         float rotation;
         void draw(glm::mat4 VP);
         void tick();
+        float factor;
+        string flag;
+        int ticks;
         bool checkMove(map<pair<int, int>, vector<pair<int, int>>> graph, float newX, float newY);
         void tick_input(GLFWwindow *window, map<pair<int, int>, vector<pair<int, int>>> graph);
         void move(float x, float y, std::vector<Cell> cells, bool isX);

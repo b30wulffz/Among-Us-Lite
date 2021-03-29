@@ -118,8 +118,8 @@ void Maze::draw(glm::mat4 VP){
     for(auto cell: this->cells){
         cell.draw(VP);
     }
-    this->player.draw(VP);
     this->imposter.draw(VP);
+    this->player.draw(VP);
 }
 
 void Maze::tick_input(GLFWwindow *window) {

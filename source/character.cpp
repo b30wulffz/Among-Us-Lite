@@ -7,6 +7,10 @@ Character::Character(int x, int y, bool isImposter){
     this->position = glm::vec3(x, y, 0);
     this->isImposter = isImposter;
 
+    this->factor = 1.0;
+    this->flag = "";
+    this->ticks = 0;
+
     GLfloat vertex_buffer_data[] = {
         0.25f, 0.25f, 0.0f, 
         0.75f, 0.25f, 0.0f, 
@@ -88,109 +92,146 @@ bool Character::checkMove(map<pair<int, int>, vector<pair<int, int>>> graph, flo
     return false;
 }
 
-float factor = 1.0;
-string flag = "";
-
 void Character::tick_input(GLFWwindow *window, map<pair<int, int>, vector<pair<int, int>>> graph) {
     float unitStep = 1.0, speed = 0.1, cutoff = 0.0001;
     
-    if(fabs(factor - unitStep) < cutoff){ // factor == 1.0
+    if(fabs(this->factor - unitStep) < cutoff){ // factor == 1.0
         if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
             if(this->checkMove(graph, this->position.x+unitStep, this->position.y)){
-                flag = "+x";
-                factor = 0.0;
+                this->flag = "+x";
+                this->factor = 0.0;
             }
         }
         if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
             if(this->checkMove(graph, this->position.x-unitStep, this->position.y)){
-                flag = "-x";
-                factor = 0.0;
+                this->flag = "-x";
+                this->factor = 0.0;
             }
         }
         if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
             if(this->checkMove(graph, this->position.x, this->position.y+unitStep)){
-                flag = "+y";
-                factor = 0.0;
+                this->flag = "+y";
+                this->factor = 0.0;
             }
         }
         if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
             if(this->checkMove(graph, this->position.x, this->position.y-unitStep)){
-                flag = "-y";
-                factor = 0.0;
+                this->flag = "-y";
+                this->factor = 0.0;
             }
         }
     }
     else{
-        if(flag == "+x"){
+        if(this->flag == "+x"){
             this->position.x+=speed;
         }
-        else if(flag == "-x"){
+        else if(this->flag == "-x"){
             this->position.x-=speed;
         }
-        else if(flag == "+y"){
+        else if(this->flag == "+y"){
             this->position.y+=speed;
         }
-        else if(flag == "-y"){
+        else if(this->flag == "-y"){
             this->position.y-=speed;
         }
-        factor += speed;
+        this->factor += speed;
         // if(fabs(factor - unitStep) < cutoff){
         //     this_thread::sleep_for(chrono::microseconds(10));
         // }
     }
 }
-int ticks = 0;
+
 void Character::findPlayerAndMove(Character player, map<pair<int, int>, vector<pair<int, int>>> graph){
-    ticks++;
-    ticks = ticks % 50;
+    this->ticks++;
+    this->ticks = (this->ticks) % 50;
+    float unitStep = 1.0, speed = 0.1, cutoff = 0.0001;
+
     if(this->isImposter){
-        if(ticks == 0){
-            pair<int, int> head, actual_location;
-            head = actual_location = make_pair((int)(this->position.x + 0.5), (int)(this->position.y + 0.5));
-            pair<int, int> player_location = make_pair((int)(player.position.x + 0.5), (int)(player.position.y + 0.5));
-            queue<pair<int, int>> q;
+        if(fabs((this->factor) - unitStep) < cutoff){ 
+            if((this->ticks) == 0){
+                pair<int, int> head, actual_location;
+                head = actual_location = make_pair((int)(this->position.x + 0.5), (int)(this->position.y + 0.5));
+                pair<int, int> player_location = make_pair((int)(player.position.x + 0.5), (int)(player.position.y + 0.5));
+                queue<pair<int, int>> q;
 
 
-            // using BFS
-            map<pair<int, int>, pair<int, int>> parent;
-            map<pair<int, int>, int> visited;
-            q.push(head);
-            visited[head] = 1;
-            bool flag = false;
-            while(q.size() > 0){
-                head = q.front();
-                q.pop();
-                vector<pair<int, int>> neighbours = graph[head];
-                for(auto node: neighbours){
-                    if(!visited[node]){
-                        parent[node] = head;
-                        if(node == player_location){
-                            flag = true;
-                            break;
+                // using BFS
+                map<pair<int, int>, pair<int, int>> parent;
+                map<pair<int, int>, int> visited;
+                q.push(head);
+                visited[head] = 1;
+                bool flag = false;
+                while(q.size() > 0){
+                    head = q.front();
+                    q.pop();
+                    vector<pair<int, int>> neighbours = graph[head];
+                    for(auto node: neighbours){
+                        if(!visited[node]){
+                            parent[node] = head;
+                            if(node == player_location){
+                                flag = true;
+                                break;
+                            }
+                            q.push(node);
+                            visited[node] = 1;
                         }
-                        q.push(node);
-                        visited[node] = 1;
+                    }
+                    if(flag){
+                        break;
                     }
                 }
-                if(flag){
-                    break;
+
+                // backtrack to starting node
+                parent[actual_location] = actual_location;
+                head = player_location;
+                while(parent[head] != actual_location){
+                    head = parent[head];
+                }
+
+                // cout << " -- > " << head.second << " " << head.first << endl;
+
+                int oldX = actual_location.first;
+                int oldY = actual_location.second;
+                int newX = head.first;
+                int newY = head.second;
+
+                if(oldY == newY){
+                    if(newX > oldX){
+                        this->flag = "+x";
+                        this->factor = 0.0;
+                    }
+                    else if(newX < oldX){
+                        this->flag = "-x";
+                        this->factor = 0.0;
+                    }
+                }
+                else{
+                    if(newY > oldY){
+                        this->flag = "+y";
+                        this->factor = 0.0;
+                    }
+                    else if(newY < oldY){
+                        this->flag = "-y";
+                        this->factor = 0.0;
+                    }
                 }
             }
-
-            // backtrack to starting node
-            parent[actual_location] = actual_location;
-            head = player_location;
-            while(parent[head] != actual_location){
-                head = parent[head];
+        }
+        else{
+            if(this->flag == "+x"){
+                this->position.x+=speed;
             }
-
-            // cout << " -- > " << head.second << " " << head.first << endl;
-            int newX = head.first;
-            int newY = head.second;
-            this->position.x = newX;
-            this->position.y = newY;
+            else if(this->flag == "-x"){
+                this->position.x-=speed;
+            }
+            else if(this->flag == "+y"){
+                this->position.y+=speed;
+            }
+            else if(this->flag == "-y"){
+                this->position.y-=speed;
+            }
+            this->factor += speed;
         }
     }
-    // this_thread::sleep_for(chrono::milliseconds(1000));
 
 }
