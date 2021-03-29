@@ -101,6 +101,7 @@ Maze::Maze(int vertices){
     }
     
     this->player = Character(0,0,false);
+    this->imposter = Character(5,0,true);
 }
 
 void Maze::draw(glm::mat4 VP){
@@ -118,8 +119,10 @@ void Maze::draw(glm::mat4 VP){
         cell.draw(VP);
     }
     this->player.draw(VP);
+    this->imposter.draw(VP);
 }
 
 void Maze::tick_input(GLFWwindow *window) {
     this->player.tick_input(window, this->graph);    
+    this->imposter.findPlayerAndMove(this->player, this->graph);
 }
