@@ -121,5 +121,5 @@ void Maze::draw(glm::mat4 VP){
 }
 
 void Maze::tick_input(GLFWwindow *window) {
-    this->player.tick_input(window);    
+    this->player.tick_input(window, this->graph);    
 }

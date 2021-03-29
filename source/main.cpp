@@ -24,6 +24,8 @@ glm::vec3 cameraFront ( 0, 0, -5);
 glm::vec3 up (-1, 0, 0);
 glm::vec3 target = eye + cameraFront;
 
+bool view_mode = false;
+
 float screen_zoom = 1, screen_center_x = 0, screen_center_y = 0;
 float camera_rotation_angle = 0;
 
@@ -78,33 +80,47 @@ void draw() {
 void tick_input(GLFWwindow *window) {
     // For Camera Translation
     const float cameraSpeed = 0.2f;
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
-        eye -= cameraSpeed * cameraFront;
+    if(glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS){
+        view_mode = true;
+        // eye = glm::vec3( 0, 0, 5);
         target = eye + cameraFront;
     }
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
-        eye += cameraSpeed * cameraFront;
-        target = eye + cameraFront;
+    if(glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS){
+        view_mode = false;
     }
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
-        eye -= glm::normalize(glm::cross(cameraFront, up)) * cameraSpeed;
-        target = eye + cameraFront;
-    }
-    if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS){
-        eye += glm::normalize(glm::cross(cameraFront, up)) * cameraSpeed;
-        target = eye + cameraFront;
-    }
-    if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS){
-        eye -= up* cameraSpeed;
-        target = eye + cameraFront;
-    }
-    if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS){
-        eye += up* cameraSpeed;
-        target = eye + cameraFront;
-    }
+
     maze.tick_input(window);
-    target = glm::vec3(maze.player.position);
-    eye = target-cameraFront;
+
+    if(view_mode){
+        if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS){
+            eye -= cameraSpeed * cameraFront;
+            target = eye + cameraFront;
+        }
+        if (glfwGetKey(window, GLFW_KEY_N) == GLFW_PRESS){
+            eye += cameraSpeed * cameraFront;
+            target = eye + cameraFront;
+        }
+        if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS){
+            eye -= glm::normalize(glm::cross(cameraFront, up)) * cameraSpeed;
+            target = eye + cameraFront;
+        }
+        if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS){
+            eye += glm::normalize(glm::cross(cameraFront, up)) * cameraSpeed;
+            target = eye + cameraFront;
+        }
+        if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS){
+            eye -= up* cameraSpeed;
+            target = eye + cameraFront;
+        }
+        if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS){
+            eye += up* cameraSpeed;
+            target = eye + cameraFront;
+        }
+    }
+    else {
+        target = glm::vec3(maze.player.position);
+        eye = target-cameraFront;
+    }
 }
 
 

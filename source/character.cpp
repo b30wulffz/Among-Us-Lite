@@ -61,30 +61,61 @@ void Character::move(float x, float y, std::vector<Cell> cells, bool isX){
     // }
 
 }
- 
+
+bool Character::checkMove(map<pair<int, int>, vector<pair<int, int>>> graph, float x, float y){
+    
+    // adding 0.5, trick to fix precision while converting to int
+    int oldX = this->position.x + 0.5;
+    int oldY = this->position.y+ 0.5;
+
+    int newX = x+ 0.5;;
+    int newY = y+ 0.5;;
+
+    // in opengl, while plotting, y and x are being considered as in reverse [x,y], but graph contains the values of order [y,x]
+
+    pair<int, int> newPos = make_pair(newX, newY);
+
+    vector<pair<int, int>> neighbours = graph[make_pair(oldX, oldY)];
+
+    for(auto pos : neighbours){
+        if(newPos == pos){
+            return true;
+        }
+    }
+
+    return false;
+}
 
 float factor = 1.0;
 string flag = "";
 
-void Character::tick_input(GLFWwindow *window) {
+void Character::tick_input(GLFWwindow *window, map<pair<int, int>, vector<pair<int, int>>> graph) {
     float unitStep = 1.0, speed = 0.1, cutoff = 0.0001;
     
     if(fabs(factor - unitStep) < cutoff){ // factor == 1.0
         if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
-            flag = "+x";
-            factor = 0.0;
+            if(this->checkMove(graph, this->position.x+unitStep, this->position.y)){
+                flag = "+x";
+                factor = 0.0;
+            }
         }
         if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
-            flag = "-x";
-            factor = 0.0;
+            if(this->checkMove(graph, this->position.x-unitStep, this->position.y)){
+                flag = "-x";
+                factor = 0.0;
+            }
         }
         if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
-            flag = "+y";
-            factor = 0.0;
+            if(this->checkMove(graph, this->position.x, this->position.y+unitStep)){
+                flag = "+y";
+                factor = 0.0;
+            }
         }
         if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
-            flag = "-y";
-            factor = 0.0;
+            if(this->checkMove(graph, this->position.x, this->position.y-unitStep)){
+                flag = "-y";
+                factor = 0.0;
+            }
         }
     }
     else{
@@ -101,6 +132,9 @@ void Character::tick_input(GLFWwindow *window) {
             this->position.y-=speed;
         }
         factor += speed;
+        // if(fabs(factor - unitStep) < cutoff){
+        //     this_thread::sleep_for(chrono::microseconds(10));
+        // }
     }
 
 
