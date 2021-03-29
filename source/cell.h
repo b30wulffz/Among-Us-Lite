@@ -11,6 +11,8 @@ class Cell {
         float rotation;
         void draw(glm::mat4 VP);
         void tick();
+        std::vector<GLfloat> shape_vertices;
+        std::vector<GLfloat> color_vertices;
     private:
         VAO *object;
 };

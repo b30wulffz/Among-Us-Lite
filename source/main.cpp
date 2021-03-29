@@ -102,6 +102,9 @@ void tick_input(GLFWwindow *window) {
         eye += up* cameraSpeed;
         target = eye + cameraFront;
     }
+    maze.tick_input(window);
+    target = glm::vec3(maze.player.position);
+    eye = target-cameraFront;
 }
 
 
@@ -119,7 +122,8 @@ void initGL(GLFWwindow *window, int width, int height) {
 
     // ball1       = Ball(0, 0, COLOR_RED);
     // board = Cell(0,0,1,0,1,1);
-    maze = Maze(15);
+    maze = Maze(10);
+    target = glm::vec3(maze.player.position);
 
     // Create and compile our GLSL program from the shaders
     programID = LoadShaders("../source/shaders/shader.vert", "../source/shaders/shader.frag");

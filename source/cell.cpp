@@ -5,7 +5,7 @@
 Cell::Cell(int x, int y, bool top, bool bottom, bool left, bool right){
     this->position = glm::vec3(x, y, 0);
 
-    std::vector<GLfloat> tmp_shape{
+    this->shape_vertices = {
         0.0f, 0.0f, 0.0f,
         1.0f, 0.0f, 0.0f,
         0.0f, 1.0f, 0.0f,
@@ -15,7 +15,7 @@ Cell::Cell(int x, int y, bool top, bool bottom, bool left, bool right){
         1.0f, 1.0f, 0.0f,
     };
 
-    std::vector<GLfloat> tmp_color{
+    this->color_vertices = {
         0.517f,  0.713f,  0.338f,
         0.517f,  0.713f,  0.338f,
         0.517f,  0.713f,  0.338f,
@@ -27,7 +27,7 @@ Cell::Cell(int x, int y, bool top, bool bottom, bool left, bool right){
 
     if(top){
         // top wall
-        tmp_shape.insert(tmp_shape.end(), {
+        this->shape_vertices.insert(this->shape_vertices.end(), {
             0.0f, 0.0f, 0.0f,
             0.1f, 0.0f, 0.0f,
             0.0f, 1.0f, 0.0f,
@@ -36,7 +36,7 @@ Cell::Cell(int x, int y, bool top, bool bottom, bool left, bool right){
             0.0f, 1.0f, 0.0f,
             0.1f, 1.0f, 0.0f,
         });
-        tmp_color.insert(tmp_color.end(), {
+        this->color_vertices.insert(this->color_vertices.end(), {
             0.393f,  0.621f,  0.362f,
             0.393f,  0.621f,  0.362f,
             0.393f,  0.621f,  0.362f,
@@ -49,7 +49,7 @@ Cell::Cell(int x, int y, bool top, bool bottom, bool left, bool right){
 
     if(bottom){
         // bottom wall
-        tmp_shape.insert(tmp_shape.end(), {
+        this->shape_vertices.insert(this->shape_vertices.end(), {
             0.9f, 0.0f, 0.0f,
             1.0f, 0.0f, 0.0f,
             0.9f, 1.0f, 0.0f,
@@ -58,7 +58,7 @@ Cell::Cell(int x, int y, bool top, bool bottom, bool left, bool right){
             0.9f, 1.0f, 0.0f,
             1.0f, 1.0f, 0.0f,
         });
-        tmp_color.insert(tmp_color.end(), {
+        this->color_vertices.insert(this->color_vertices.end(), {
             0.393f,  0.621f,  0.362f,
             0.393f,  0.621f,  0.362f,
             0.393f,  0.621f,  0.362f,
@@ -71,7 +71,7 @@ Cell::Cell(int x, int y, bool top, bool bottom, bool left, bool right){
 
     if(left){
         // left wall
-        tmp_shape.insert(tmp_shape.end(), {
+        this->shape_vertices.insert(this->shape_vertices.end(), {
             0.0f, 0.0f, 0.0f,
             1.0f, 0.0f, 0.0f,
             0.0f, 0.1f, 0.0f,
@@ -80,7 +80,7 @@ Cell::Cell(int x, int y, bool top, bool bottom, bool left, bool right){
             0.0f, 0.1f, 0.0f,
             1.0f, 0.1f, 0.0f,
         });
-        tmp_color.insert(tmp_color.end(), {
+        this->color_vertices.insert(this->color_vertices.end(), {
             0.393f,  0.621f,  0.362f,
             0.393f,  0.621f,  0.362f,
             0.393f,  0.621f,  0.362f,
@@ -92,7 +92,7 @@ Cell::Cell(int x, int y, bool top, bool bottom, bool left, bool right){
     }
     if(right){
         // right wall
-        tmp_shape.insert(tmp_shape.end(), {
+        this->shape_vertices.insert(this->shape_vertices.end(), {
             0.0f, 0.9f, 0.0f,
             1.0f, 0.9f, 0.0f,
             0.0f, 1.0f, 0.0f,
@@ -101,7 +101,7 @@ Cell::Cell(int x, int y, bool top, bool bottom, bool left, bool right){
             0.0f, 1.0f, 0.0f,
             1.0f, 1.0f, 0.0f,
         });
-        tmp_color.insert(tmp_color.end(), {
+        this->color_vertices.insert(this->color_vertices.end(), {
             0.393f,  0.621f,  0.362f,
             0.393f,  0.621f,  0.362f,
             0.393f,  0.621f,  0.362f,
@@ -112,16 +112,16 @@ Cell::Cell(int x, int y, bool top, bool bottom, bool left, bool right){
         });
     }
 
-    GLfloat vertex_buffer_data[tmp_shape.size()];
-    for(int i=0; i<tmp_shape.size(); i++){
-        vertex_buffer_data[i] = tmp_shape[i];
+    GLfloat vertex_buffer_data[this->shape_vertices.size()];
+    for(int i=0; i<this->shape_vertices.size(); i++){
+        vertex_buffer_data[i] = this->shape_vertices[i];
     }
-    GLfloat g_color_buffer_data[tmp_color.size()];
-    for(int i=0; i<tmp_color.size(); i++){
-        g_color_buffer_data[i] = tmp_color[i];
+    GLfloat g_color_buffer_data[this->color_vertices.size()];
+    for(int i=0; i<this->color_vertices.size(); i++){
+        g_color_buffer_data[i] = this->color_vertices[i];
     }
 
-    this->object = create3DObject(GL_TRIANGLES, tmp_color.size()/3, vertex_buffer_data, g_color_buffer_data, GL_FILL);
+    this->object = create3DObject(GL_TRIANGLES, this->color_vertices.size()/3, vertex_buffer_data, g_color_buffer_data, GL_FILL);
 }
 
 void Cell::draw(glm::mat4 VP){

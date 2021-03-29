@@ -68,13 +68,13 @@ Maze::Maze(int vertices){
     }
 
     // map<pair<int, int>, map<pair<int, int>, int>> graph;
-    map<pair<int, int>, vector<pair<int, int>>> graph;
+    // map<pair<int, int>, vector<pair<int, int>>> graph;
     
-    kruskal(graph, v, edges);
+    kruskal(this->graph, v, edges);
 
     for(int y=0; y<v; y++){
         for(int x=0; x<v; x++){
-            vector<pair<int, int>> nodes = graph[make_pair(y, x)];
+            vector<pair<int, int>> nodes = this->graph[make_pair(y, x)];
             cout << "(" << x << " " << y << "): ";
             bool top, bottom, left, right;
             top = bottom = left = right = true;
@@ -99,8 +99,8 @@ Maze::Maze(int vertices){
             this->cells.push_back(Cell(y, x, top, bottom, left, right));
         }
     }
-
-
+    
+    this->player = Character(0,0,false);
 }
 
 void Maze::draw(glm::mat4 VP){
@@ -117,4 +117,9 @@ void Maze::draw(glm::mat4 VP){
     for(auto cell: this->cells){
         cell.draw(VP);
     }
+    this->player.draw(VP);
+}
+
+void Maze::tick_input(GLFWwindow *window) {
+    this->player.tick_input(window);    
 }
