@@ -45,6 +45,7 @@ void kruskal(map<pair<int, int>, vector<pair<int, int>>>  &graph, int vertex_cou
 Maze::Maze(int vertices){
     this->position = glm::vec3(0, 0, 0);
     int v = vertices; // v*v maze
+    this->vertices = vertices;
     vector<pair<pair<int, int>, pair<int, int>>> edges;
     // coordinates are stored as (y,x)
     for(int y=0; y<v; y++){
@@ -106,6 +107,12 @@ Maze::Maze(int vertices){
 
     this->buttonImposterKill = Item(0,5,"button-imposter-kill");
     this->buttonLaunchArtefacts = Item(4,4, "button-launch-artefacts");
+    this->isTask1 = false;
+    this->isTask2 = false;
+    this->goal = make_pair(this->vertices-1, this->vertices-1);
+    this->scoreMultiplier = 1;
+    this->score = 0;
+
 }
 
 void Maze::draw(glm::mat4 VP){
@@ -124,6 +131,9 @@ void Maze::draw(glm::mat4 VP){
     }
     this->buttonImposterKill.draw(VP);
     this->buttonLaunchArtefacts.draw(VP);
+    for(auto item : this->items){
+        item.draw(VP);
+    }
     if(this->imposter.health > 0){
         this->imposter.draw(VP);
     }
@@ -146,7 +156,50 @@ void Maze::tick_input(GLFWwindow *window) {
     if(this->imposter.health > 0){
         this->imposter.findPlayerAndMove(this->player, this->graph);
     }
-    if(verifyOverlap(this->player.position.x, this->player.position.y, this->buttonImposterKill.position.x, this->buttonImposterKill.position.y)){
+    if(verifyOverlap(this->player.position.x, this->player.position.y, this->buttonImposterKill.position.x, this->buttonImposterKill.position.y) && !(this->isTask1)){
+        this->isTask1 = true;
         this->imposter.health = 0;
+    }
+    if(verifyOverlap(this->player.position.x, this->player.position.y, this->buttonLaunchArtefacts.position.x, this->buttonLaunchArtefacts.position.y) && !(this->isTask2)){
+        this->isTask2 = true;
+        vector<pair<int, int>> nodes;
+        for(int y=0; y < this->vertices; y++){
+            for(int x=0; x < this->vertices; x++){
+                if(!verifyOverlap(this->player.position.x, this->player.position.y, x, y) && !verifyOverlap(this->buttonImposterKill.position.x, this->buttonImposterKill.position.y, x, y) && !verifyOverlap(this->buttonLaunchArtefacts.position.x, this->buttonLaunchArtefacts.position.y, x, y) && !verifyOverlap(this->goal.first, this->goal.second, x, y)){
+                    nodes.push_back(make_pair(x, y));
+                }
+            }
+        }
+
+        unsigned seed = chrono::system_clock::now().time_since_epoch().count();
+        shuffle(nodes.begin(), nodes.end(), default_random_engine(seed));
+        // vector<string> itemChoices={"coin", "bomb"};
+        int itemCount = (nodes.size()/4);
+        for(int i=0; i<itemCount; i++){
+            string itemType;
+            if(i < (itemCount * 2/3)){
+                itemType = "coin";
+            }
+            else{
+                itemType = "bomb";
+            }
+            this->items.push_back(Item(nodes[i].first, nodes[i].second, itemType));
+        }
+    }
+    for(auto i = this->items.begin(); i != this->items.end(); ++i){
+        Item item = *i;
+        if(verifyOverlap(this->player.position.x, this->player.position.y, item.position.x, item.position.y)){
+            if(item.type == "coin"){
+                this->score += (this->scoreMultiplier * 1);
+            }
+            else{
+                this->player.health--;
+            }
+            this->items.erase(i);
+            break;
+        }
+    }
+    if(this->isTask1 && this->isTask2 && verifyOverlap(this->player.position.x, this->player.position.y, this->goal.first, this->goal.second)){
+        cout << "Game over" << endl;
     }
 }

@@ -19,6 +19,12 @@ class Maze {
         vector<Cell> cells;
         Character player;
         Character imposter;
+        bool isTask1;
+        bool isTask2;
+        int vertices;
+        int score;
+        int scoreMultiplier;
+        pair<int, int> goal;
         Item buttonImposterKill;
         Item buttonLaunchArtefacts;
         vector<Item> items;
