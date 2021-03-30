@@ -1,6 +1,7 @@
 #include "main.h"
 #include "cell.h"
 #include "character.h"
+#include "item.h"
 #include <bits/stdc++.h>
 
 
@@ -15,9 +16,12 @@ class Maze {
         glm::vec3 position;
         void draw(glm::mat4 VP);
         map<pair<int, int>, vector<pair<int, int>>> graph;
-        std::vector<Cell> cells;
+        vector<Cell> cells;
         Character player;
         Character imposter;
+        Item buttonImposterKill;
+        Item buttonLaunchArtefacts;
+        vector<Item> items;
         void tick_input(GLFWwindow *window);
     private:
         VAO *object;
