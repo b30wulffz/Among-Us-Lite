@@ -98,7 +98,7 @@ Maze::Maze(int vertices){
                 cout << "(" << n.second << ", " << n.first << "), ";
             }
             cout << top << " " << bottom << " " << left << " " << right << endl;
-            this->cells.push_back(Cell(y, x, top, bottom, left, right));
+            this->cells.push_back(Cell(y, x, top, bottom, left, right, false));
         }
     }
     
@@ -112,6 +112,7 @@ Maze::Maze(int vertices){
     this->goal = make_pair(this->vertices-1, this->vertices-1);
     this->scoreMultiplier = 1;
     this->score = 0;
+    this->blindMode = false;
 
 }
 
@@ -138,6 +139,31 @@ void Maze::draw(glm::mat4 VP){
         this->imposter.draw(VP);
     }
     this->player.draw(VP);
+    if(this->blindMode){
+        pair<int, int> playerVertex = make_pair(this->player.position.x+0.5, this->player.position.y+0.5);
+        vector<pair<int, int>> avoidVertices;
+        avoidVertices.push_back(playerVertex);
+        // avoidVertices.
+        vector<pair<int, int>> nodes = this->graph[playerVertex];
+        avoidVertices.insert(avoidVertices.end(), nodes.begin(), nodes.end());
+        vector<Cell> overlay_cells;
+        for(int i=0; i<this->vertices; i++){
+            for(int j=0; j<this->vertices; j++){
+                bool check = false;
+                for(auto avoid: avoidVertices){
+                    if(avoid.first == i && avoid.second == j){
+                        check = true;
+                        break;
+                    }
+                }
+                if(!check){
+                    Cell overlay_cell = Cell(i, j, true, true, true, true, true);
+                    overlay_cell.draw(VP);
+                }
+            }
+        }
+    }
+    
 }
 
 bool verifyOverlap(float x1, float y1, float x2, float y2){
@@ -153,6 +179,16 @@ bool verifyOverlap(float x1, float y1, float x2, float y2){
 
 void Maze::tick_input(GLFWwindow *window) {
     this->player.tick_input(window, this->graph);    
+
+    if(glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS){
+        this->blindMode = true;
+        this->scoreMultiplier = 3;
+    }    
+    if(glfwGetKey(window, GLFW_KEY_V) == GLFW_PRESS){
+        this->blindMode = false;
+        this->scoreMultiplier = 1;
+    }
+
     if(this->imposter.health > 0){
         this->imposter.findPlayerAndMove(this->player, this->graph);
     }

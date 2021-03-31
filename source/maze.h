@@ -24,6 +24,7 @@ class Maze {
         int vertices;
         int score;
         int scoreMultiplier;
+        bool blindMode;
         pair<int, int> goal;
         Item buttonImposterKill;
         Item buttonLaunchArtefacts;

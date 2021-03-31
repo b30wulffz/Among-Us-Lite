@@ -2,7 +2,7 @@
 #include "main.h"
 #include <vector>
 
-Cell::Cell(int x, int y, bool top, bool bottom, bool left, bool right){
+Cell::Cell(int x, int y, bool top, bool bottom, bool left, bool right, bool isOverlay){
     this->position = glm::vec3(x*1.0, y*1.0, 0.0);
     this->rotation = 0;
 
@@ -16,15 +16,28 @@ Cell::Cell(int x, int y, bool top, bool bottom, bool left, bool right){
         1.0f, 1.0f, 0.0f,
     };
 
-    this->color_vertices = {
-        0.517f,  0.713f,  0.338f,
-        0.517f,  0.713f,  0.338f,
-        0.517f,  0.713f,  0.338f,
+    if(!isOverlay){
+        this->color_vertices = {
+            0.517f,  0.713f,  0.338f,
+            0.517f,  0.713f,  0.338f,
+            0.517f,  0.713f,  0.338f,
 
-        0.517f,  0.713f,  0.338f,
-        0.517f,  0.713f,  0.338f,
-        0.517f,  0.713f,  0.338f,
-    };
+            0.517f,  0.713f,  0.338f,
+            0.517f,  0.713f,  0.338f,
+            0.517f,  0.713f,  0.338f,
+        };
+    }
+    else{
+        this->color_vertices = {
+            0.393f,  0.621f,  0.362f,
+            0.393f,  0.621f,  0.362f,
+            0.393f,  0.621f,  0.362f,
+
+            0.393f,  0.621f,  0.362f,
+            0.393f,  0.621f,  0.362f,
+            0.393f,  0.621f,  0.362f,
+        };
+    }
 
     if(top){
         // top wall
@@ -124,6 +137,52 @@ Cell::Cell(int x, int y, bool top, bool bottom, bool left, bool right){
 
     this->object = create3DObject(GL_TRIANGLES, this->color_vertices.size()/3, vertex_buffer_data, g_color_buffer_data, GL_FILL);
 }
+
+// void Cell::hideWalls(bool hide){
+//     std::vector<GLfloat> nowall_shape_vertices = {
+//         0.0f, 0.0f, 0.0f,
+//         1.0f, 0.0f, 0.0f,
+//         0.0f, 1.0f, 0.0f,
+
+//         1.0f, 0.0f, 0.0f,
+//         0.0f, 1.0f, 0.0f,
+//         1.0f, 1.0f, 0.0f,
+//     };
+
+//     std::vector<GLfloat> nowall_color_vertices = {
+//         0.517f,  0.713f,  0.338f,
+//         0.517f,  0.713f,  0.338f,
+//         0.517f,  0.713f,  0.338f,
+
+//         0.517f,  0.713f,  0.338f,
+//         0.517f,  0.713f,  0.338f,
+//         0.517f,  0.713f,  0.338f,
+//     };
+
+//     std::vector<GLfloat> shape_vertices;
+//     std::vector<GLfloat> color_vertices;
+
+//     if(hide){
+//         shape_vertices = nowall_shape_vertices;
+//         color_vertices = nowall_color_vertices;
+//     }
+//     else{
+//         shape_vertices = this->shape_vertices;
+//         color_vertices = this->color_vertices;
+//     }
+    
+//     int count = shape_vertices.size();
+//     GLfloat vertex_buffer_data[count];
+//     for(int i=0; i<count; i++){
+//         vertex_buffer_data[i] = shape_vertices[i];
+//     }
+//     GLfloat g_color_buffer_data[count];
+//     for(int i=0; i<count; i++){
+//         g_color_buffer_data[i] = color_vertices[i];
+//     }
+
+//     this->object = create3DObject(GL_TRIANGLES, count/3, vertex_buffer_data, g_color_buffer_data, GL_FILL);
+// }
 
 void Cell::draw(glm::mat4 VP){
     Matrices.model = glm::mat4(1.0f);
