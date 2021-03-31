@@ -157,6 +157,8 @@ void initGL(GLFWwindow *window, int width, int height) {
     glDepthFunc (GL_LEQUAL);
     glEnable(GL_BLEND);
 
+	glClearColor(0.70588f, 0.95686f, 0.84314f, 0.0);
+
     cout << "VENDOR: " << glGetString(GL_VENDOR) << endl;
     cout << "RENDERER: " << glGetString(GL_RENDERER) << endl;
     cout << "VERSION: " << glGetString(GL_VERSION) << endl;

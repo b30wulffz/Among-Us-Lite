@@ -13,7 +13,10 @@ dark_blue = [18, 11, 147]
 orange = [245, 176, 65]
 yellow = [241, 196, 15]
 
-color = yellow
+sky_blue = [202, 247, 227]
+dark_sky_blue = [180, 244, 215]
+
+color = dark_sky_blue
 for c in color:
     k = round(c/255, 5)
     print("{}f, ".format(k), end="")
