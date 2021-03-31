@@ -5,6 +5,17 @@
 
 using namespace std;
 
+bool verifyOverlap(float x1, float y1, float x2, float y2){
+    int xa = x1 + 0.5;
+    int ya = y1 + 0.5;
+    int xb = x2 + 0.5;
+    int yb = y2 + 0.5;
+    if(xa == xb && ya == yb){
+        return true;
+    }
+    return false;
+}
+
 pair<int, int> find(pair<int, int> i, vector<vector<pair<int, int>>> &parent){
     while(parent[i.first][i.second] != i){
         i = parent[i.first][i.second];
@@ -109,13 +120,26 @@ Maze::Maze(int vertices){
     }
     
     this->player = Character(0,0,false);
-    this->imposter = Character(5,0,true);
+    this->goal = make_pair(this->vertices-1, this->vertices-1);
 
-    this->buttonImposterKill = Item(0,5,"button-imposter-kill");
-    this->buttonLaunchArtefacts = Item(4,4, "button-launch-artefacts");
+    vector<pair<int, int>> nodes;
+    for(int y=0; y < this->vertices; y++){
+        for(int x=0; x < this->vertices; x++){
+            if(!verifyOverlap(this->player.position.x, this->player.position.y, x, y) && !verifyOverlap(this->goal.first, this->goal.second, x, y)){
+                nodes.push_back(make_pair(x, y));
+            }
+        }
+    }
+
+    unsigned seed = chrono::system_clock::now().time_since_epoch().count();
+    shuffle(nodes.begin(), nodes.end(), default_random_engine(seed));
+
+    this->imposter = Character(nodes[0].first,nodes[0].second,true);
+
+    this->buttonImposterKill = Item(nodes[1].first,nodes[1].second,"button-imposter-kill");
+    this->buttonLaunchArtefacts = Item(nodes[2].first,nodes[2].second, "button-launch-artefacts");
     this->isTask1 = false;
     this->isTask2 = false;
-    this->goal = make_pair(this->vertices-1, this->vertices-1);
     this->scoreMultiplier = 1;
     this->score = 0;
     this->blindMode = false;
@@ -170,17 +194,6 @@ void Maze::draw(glm::mat4 VP){
         }
     }
     
-}
-
-bool verifyOverlap(float x1, float y1, float x2, float y2){
-    int xa = x1 + 0.5;
-    int ya = y1 + 0.5;
-    int xb = x2 + 0.5;
-    int yb = y2 + 0.5;
-    if(xa == xb && ya == yb){
-        return true;
-    }
-    return false;
 }
 
 void Maze::tick_input(GLFWwindow *window) {
