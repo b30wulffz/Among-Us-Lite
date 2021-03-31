@@ -5,6 +5,8 @@ using namespace std;
 
 Character::Character(int x, int y, bool isImposter){
     this->position = glm::vec3(x*1.0, y*1.0, 0.0);
+    this->rotation = 0;
+
     this->isImposter = isImposter;
     this->health = 100;
 
@@ -1418,7 +1420,7 @@ void Character::findPlayerAndMove(Character player, map<pair<int, int>, vector<p
                     head = parent[head];
                 }
 
-                cout << " -- > " << head.second << " " << head.first << endl;
+                // cout << " -- > " << head.second << " " << head.first << endl;
 
                 int oldX = actual_location.first;
                 int oldY = actual_location.second;
