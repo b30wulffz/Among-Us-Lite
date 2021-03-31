@@ -6,7 +6,7 @@
 class Cell {
     public:
         Cell(){}
-        Cell(int x, int y, bool top, bool bottom, bool left, bool right, bool isOverlay);
+        Cell(int x, int y, bool top, bool bottom, bool left, bool right, bool isOverlay, bool isGoal);
         glm::vec3 position;
         float rotation;
         void draw(glm::mat4 VP);

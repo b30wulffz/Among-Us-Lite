@@ -2,7 +2,7 @@
 #include "main.h"
 #include <vector>
 
-Cell::Cell(int x, int y, bool top, bool bottom, bool left, bool right, bool isOverlay){
+Cell::Cell(int x, int y, bool top, bool bottom, bool left, bool right, bool isOverlay, bool isGoal){
     this->position = glm::vec3(x*1.0, y*1.0, 0.0);
     this->rotation = 0;
 
@@ -17,15 +17,28 @@ Cell::Cell(int x, int y, bool top, bool bottom, bool left, bool right, bool isOv
     };
 
     if(!isOverlay){
-        this->color_vertices = {
-            0.517f,  0.713f,  0.338f,
-            0.517f,  0.713f,  0.338f,
-            0.517f,  0.713f,  0.338f,
+        if(!isGoal){
+            this->color_vertices = {
+                0.517f,  0.713f,  0.338f,
+                0.517f,  0.713f,  0.338f,
+                0.517f,  0.713f,  0.338f,
 
-            0.517f,  0.713f,  0.338f,
-            0.517f,  0.713f,  0.338f,
-            0.517f,  0.713f,  0.338f,
-        };
+                0.517f,  0.713f,  0.338f,
+                0.517f,  0.713f,  0.338f,
+                0.517f,  0.713f,  0.338f,
+            };
+        }
+        else{
+            this->color_vertices = {
+                0.96078f, 0.6902f, 0.2549f,
+                0.96078f, 0.6902f, 0.2549f,
+                0.96078f, 0.6902f, 0.2549f,
+                
+                0.96078f, 0.6902f, 0.2549f,
+                0.96078f, 0.6902f, 0.2549f,
+                0.96078f, 0.6902f, 0.2549f,
+            };
+        }
     }
     else{
         this->color_vertices = {

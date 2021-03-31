@@ -98,7 +98,13 @@ Maze::Maze(int vertices){
                 cout << "(" << n.second << ", " << n.first << "), ";
             }
             cout << top << " " << bottom << " " << left << " " << right << endl;
-            this->cells.push_back(Cell(y, x, top, bottom, left, right, false));
+
+            if(x == v-1 && y == v-1){
+                this->cells.push_back(Cell(y, x, top, bottom, left, right, false, true));
+            }
+            else{
+                this->cells.push_back(Cell(y, x, top, bottom, left, right, false, false));
+            }
         }
     }
     
@@ -157,7 +163,7 @@ void Maze::draw(glm::mat4 VP){
                     }
                 }
                 if(!check){
-                    Cell overlay_cell = Cell(i, j, true, true, true, true, true);
+                    Cell overlay_cell = Cell(i, j, true, true, true, true, true, false);
                     overlay_cell.draw(VP);
                 }
             }
