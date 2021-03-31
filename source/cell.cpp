@@ -3,7 +3,7 @@
 #include <vector>
 
 Cell::Cell(int x, int y, bool top, bool bottom, bool left, bool right){
-    this->position = glm::vec3(x, y, 0);
+    this->position = glm::vec3(x*1.0, y*1.0, 0.0);
 
     this->shape_vertices = {
         0.0f, 0.0f, 0.0f,

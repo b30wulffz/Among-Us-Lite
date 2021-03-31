@@ -4,7 +4,7 @@
 using namespace std;
 
 Item::Item(int x, int y, string type){
-    this->position = glm::vec3(x, y, 0);
+    this->position = glm::vec3(x*1.0, y*1.0, 0.0);
     this->type = type;
 
     vector<GLfloat> shape_vertices = {

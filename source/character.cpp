@@ -4,7 +4,7 @@
 using namespace std;
 
 Character::Character(int x, int y, bool isImposter){
-    this->position = glm::vec3(x, y, 0);
+    this->position = glm::vec3(x*1.0, y*1.0, 0.0);
     this->isImposter = isImposter;
     this->health = 100;
 
