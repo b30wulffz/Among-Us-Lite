@@ -204,12 +204,12 @@ void Hud::draw(Maze maze){
         RenderText(textShaderID, "> Release powerups and obstacles", 25.0f, 480.0f, 0.4f, (!maze.isTask2) ? glm::vec3(0.78039f, 0.0f, 0.22353f) : glm::vec3(0.09804f, 0.43529f, 0.23922f));
     
     if(maze.isGameOver){
-        RenderText(textShaderID, "Game Over", 40.0f, 250.0f, 2.0f, glm::vec3(0, 0.0f, 0.0f));
+        RenderText(textShaderID, "Game Over", 40.0f, 250.0f, 2.0f, glm::vec3(0.42353f, 0.85098f, 1.0f));
         if(maze.gameOverStatus){
-            RenderText(textShaderID, "You win", 210.0f, 200.0f, 1.0f, glm::vec3(0, 0.0f, 0.0f));
+            RenderText(textShaderID, "You win", 210.0f, 200.0f, 1.0f, glm::vec3(0.80784f, 1.0f, 0.73725f));
         }
         else{
-            RenderText(textShaderID, "You lose", 210.0f, 200.0f, 1.0f, glm::vec3(0, 0.0f, 0.0f));
+            RenderText(textShaderID, "You lose", 210.0f, 200.0f, 1.0f, glm::vec3(1.0f, 0.78431f, 0.78039f));
         }
     }
 

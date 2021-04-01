@@ -35,7 +35,4 @@ def getCol(col):
         print("{}f, ".format(k), end="")
     print()
 
-getCol(blue_s1)
-getCol(blue_s2)
-getCol(orange_s1)
-getCol(orange_s2)
+getCol([206, 255, 188])
