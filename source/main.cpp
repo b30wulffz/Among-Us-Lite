@@ -134,7 +134,7 @@ void initGL(GLFWwindow *window, int width, int height) {
     // Create the models
 
     maze = Maze(10);
-    hud = Hud(5);
+    hud = Hud(width, height);
     target = glm::vec3(maze.player.position);
 
     // Create and compile our GLSL program from the shaders

@@ -7,7 +7,7 @@
 class Hud {
     public:
         Hud(){}
-        Hud(int x);
+        Hud(int scr_width, int scr_height);
         void draw(Maze maze);
 };
 

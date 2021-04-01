@@ -77,13 +77,13 @@ void RenderText(int shaderId, std::string text, float x, float y, float scale, g
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-const unsigned int SCR_WIDTH = 600;
-const unsigned int SCR_HEIGHT = 600;
+// const unsigned int SCR_WIDTH = 600;
+// const unsigned int SCR_HEIGHT = 600;
 
-Hud::Hud(int x){
+Hud::Hud(int scr_width, int scr_height){
     textShaderID = LoadShaders("../source/shaders/text.vert", "../source/shaders/text.frag");
     glUseProgram(textShaderID);
-    glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(SCR_WIDTH), 0.0f, static_cast<float>(SCR_HEIGHT));
+    glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(scr_width), 0.0f, static_cast<float>(scr_height));
     glUniformMatrix4fv(glGetUniformLocation(textShaderID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
     // FreeType
