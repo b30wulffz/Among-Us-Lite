@@ -1324,32 +1324,34 @@ bool Character::checkMove(map<pair<int, int>, vector<pair<int, int>>> graph, flo
     return false;
 }
 
-void Character::tick_input(GLFWwindow *window, map<pair<int, int>, vector<pair<int, int>>> graph) {
+void Character::tick_input(GLFWwindow *window, map<pair<int, int>, vector<pair<int, int>>> graph, bool isGameOver) {
     float unitStep = 1.0, speed = 0.1, cutoff = 0.0001;
     
     if(fabs(this->factor - unitStep) < cutoff){ // factor == 1.0
-        if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
-            if(this->checkMove(graph, this->position.x+unitStep, this->position.y)){
-                this->flag = "+x";
-                this->factor = 0.0;
+        if(!isGameOver){
+            if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
+                if(this->checkMove(graph, this->position.x+unitStep, this->position.y)){
+                    this->flag = "+x";
+                    this->factor = 0.0;
+                }
             }
-        }
-        if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
-            if(this->checkMove(graph, this->position.x-unitStep, this->position.y)){
-                this->flag = "-x";
-                this->factor = 0.0;
+            if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
+                if(this->checkMove(graph, this->position.x-unitStep, this->position.y)){
+                    this->flag = "-x";
+                    this->factor = 0.0;
+                }
             }
-        }
-        if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
-            if(this->checkMove(graph, this->position.x, this->position.y+unitStep)){
-                this->flag = "+y";
-                this->factor = 0.0;
+            if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
+                if(this->checkMove(graph, this->position.x, this->position.y+unitStep)){
+                    this->flag = "+y";
+                    this->factor = 0.0;
+                }
             }
-        }
-        if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
-            if(this->checkMove(graph, this->position.x, this->position.y-unitStep)){
-                this->flag = "-y";
-                this->factor = 0.0;
+            if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
+                if(this->checkMove(graph, this->position.x, this->position.y-unitStep)){
+                    this->flag = "-y";
+                    this->factor = 0.0;
+                }
             }
         }
     }

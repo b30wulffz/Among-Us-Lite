@@ -21,7 +21,7 @@ class Character {
         int ticks;
         int health;
         bool checkMove(map<pair<int, int>, vector<pair<int, int>>> graph, float newX, float newY);
-        void tick_input(GLFWwindow *window, map<pair<int, int>, vector<pair<int, int>>> graph);
+        void tick_input(GLFWwindow *window, map<pair<int, int>, vector<pair<int, int>>> graph, bool isGameOver);
         void move(float x, float y, std::vector<Cell> cells, bool isX);
         void findPlayerAndMove(Character player, map<pair<int, int>, vector<pair<int, int>>> graph);
     private:

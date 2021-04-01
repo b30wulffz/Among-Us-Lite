@@ -52,6 +52,14 @@ void kruskal(map<pair<int, int>, vector<pair<int, int>>>  &graph, int vertex_cou
     } 
 }
 
+int Maze::getTimeLeft(){
+    if(!this->isGameOver){
+        int cutoff = 50;
+        int timeLeft = cutoff - (int)this->gameTimer.getSec();
+        return timeLeft;
+    }
+    return 0;
+}
 
 Maze::Maze(int vertices){
     this->position = glm::vec3(0, 0, 0);
@@ -88,7 +96,7 @@ Maze::Maze(int vertices){
     for(int y=0; y<v; y++){
         for(int x=0; x<v; x++){
             vector<pair<int, int>> nodes = this->graph[make_pair(y, x)];
-            cout << "(" << x << " " << y << "): ";
+            // cout << "(" << x << " " << y << "): ";
             bool top, bottom, left, right;
             top = bottom = left = right = true;
             for(auto n: nodes){
@@ -106,9 +114,9 @@ Maze::Maze(int vertices){
                 else if((xn == x) && (yn > y)){
                     bottom = false;
                 }
-                cout << "(" << n.second << ", " << n.first << "), ";
+                // cout << "(" << n.second << ", " << n.first << "), ";
             }
-            cout << top << " " << bottom << " " << left << " " << right << endl;
+            // cout << top << " " << bottom << " " << left << " " << right << endl;
 
             if(x == v-1 && y == v-1){
                 this->cells.push_back(Cell(y, x, top, bottom, left, right, false, true));
@@ -143,7 +151,9 @@ Maze::Maze(int vertices){
     this->scoreMultiplier = 1;
     this->score = 0;
     this->blindMode = false;
-
+    this->gameTimer.init();
+    this->gameOverStatus = false;
+    this->isGameOver = false;
 }
 
 void Maze::draw(glm::mat4 VP){
@@ -157,6 +167,7 @@ void Maze::draw(glm::mat4 VP){
     // glm::mat4 MVP = VP * Matrices.model;
     // glUniformMatrix4fv(Matrices.MatrixID, 1, GL_FALSE, &MVP[0][0]);
     // draw3DObject(this->object);
+
     for(auto cell: this->cells){
         cell.draw(VP);
     }
@@ -168,15 +179,15 @@ void Maze::draw(glm::mat4 VP){
     if(this->imposter.health > 0){
         this->imposter.draw(VP);
     }
-    this->player.draw(VP);
+    if(this->player.health > 0){
+        this->player.draw(VP);
+    }
     if(this->blindMode){
         pair<int, int> playerVertex = make_pair(this->player.position.x+0.5, this->player.position.y+0.5);
         vector<pair<int, int>> avoidVertices;
         avoidVertices.push_back(playerVertex);
-        // avoidVertices.
         vector<pair<int, int>> nodes = this->graph[playerVertex];
         avoidVertices.insert(avoidVertices.end(), nodes.begin(), nodes.end());
-        vector<Cell> overlay_cells;
         for(int i=0; i<this->vertices; i++){
             for(int j=0; j<this->vertices; j++){
                 bool check = false;
@@ -192,12 +203,18 @@ void Maze::draw(glm::mat4 VP){
                 }
             }
         }
-    }
-    
+    }  
+
 }
 
 void Maze::tick_input(GLFWwindow *window) {
-    this->player.tick_input(window, this->graph);    
+    if(this->player.health > 0){
+        this->player.tick_input(window, this->graph, this->isGameOver);    
+    }
+
+    if(this->getTimeLeft() <= 0 || this->player.health <= 0){
+        this->isGameOver = true;
+    }
 
     if(glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS){
         this->blindMode = true;
@@ -208,8 +225,11 @@ void Maze::tick_input(GLFWwindow *window) {
         this->scoreMultiplier = 1;
     }
 
-    if(this->imposter.health > 0){
+    if(this->imposter.health > 0 && !this->isGameOver){
         this->imposter.findPlayerAndMove(this->player, this->graph);
+        if(verifyOverlap(this->player.position.x, this->player.position.y, this->imposter.position.x, this->imposter.position.y) ){
+            this->player.health--;
+        }
     }
     if(verifyOverlap(this->player.position.x, this->player.position.y, this->buttonImposterKill.position.x, this->buttonImposterKill.position.y) && !(this->isTask1)){
         this->isTask1 = true;
@@ -248,13 +268,17 @@ void Maze::tick_input(GLFWwindow *window) {
                 this->score += (this->scoreMultiplier * 1);
             }
             else{
-                this->player.health--;
+                if(this->score > 0){
+                    this->score--;
+                }
             }
             this->items.erase(i);
             break;
         }
     }
+    
     if(this->isTask1 && this->isTask2 && verifyOverlap(this->player.position.x, this->player.position.y, this->goal.first, this->goal.second)){
-        cout << "Game over" << endl;
+        this->isGameOver = true;
+        this->gameOverStatus = true;
     }
 }

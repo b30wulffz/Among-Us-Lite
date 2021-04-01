@@ -2,8 +2,8 @@
 #include "cell.h"
 #include "character.h"
 #include "item.h"
+#include "clocktime.h"
 #include <bits/stdc++.h>
-
 
 #ifndef MAZE_H
 #define MAZE_H
@@ -25,6 +25,10 @@ class Maze {
         int score;
         int scoreMultiplier;
         bool blindMode;
+        Clocktime gameTimer;
+        int getTimeLeft();
+        bool gameOverStatus;
+        bool isGameOver;
         pair<int, int> goal;
         Item buttonImposterKill;
         Item buttonLaunchArtefacts;

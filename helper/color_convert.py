@@ -16,7 +16,13 @@ yellow = [241, 196, 15]
 sky_blue = [202, 247, 227]
 dark_sky_blue = [180, 244, 215]
 
-color = dark_sky_blue
+msg_red = [199, 0, 57]
+msg_green = [192, 226, 24]
+msg_orange = [226, 159, 24]
+col = [29, 131, 72]
+col = [ 25, 111, 61]
+
+color = col
 for c in color:
     k = round(c/255, 5)
     print("{}f, ".format(k), end="")

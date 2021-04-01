@@ -197,7 +197,7 @@ Cell::Cell(int x, int y, bool top, bool bottom, bool left, bool right, bool isOv
 //     this->object = create3DObject(GL_TRIANGLES, count/3, vertex_buffer_data, g_color_buffer_data, GL_FILL);
 // }
 
-void Cell::draw(glm::mat4 VP){
+void Cell:: draw(glm::mat4 VP){
     Matrices.model = glm::mat4(1.0f);
     // glm::mat4 translate = glm::translate (this->position);    // glTranslatef
     glm::mat4 translate = glm::translate (glm::vec3(this->position));    // glTranslatef

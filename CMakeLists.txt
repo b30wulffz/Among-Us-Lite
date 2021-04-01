@@ -56,6 +56,5 @@ target_link_libraries (${PROJECT_NAME} ${GLEW_LIBRARIES})
 find_package(Freetype REQUIRED)
 SET(CMAKE_CXX_FLAGS "-O2 -std=c++11")
 SET(CMAKE_EXE_LINKER_FLAGS "-v")
-set(FREETYPE_DIR "${LIB_DIR}/freetype")
-target_include_directories(${PROJECT_NAME} PRIVATE "${FREETYPE_DIR}/include")
-
+target_link_libraries(${PROJECT_NAME} ${FREETYPE_LIBRARIES})
+target_include_directories(${PROJECT_NAME} PRIVATE ${FREETYPE_INCLUDE_DIRS})
