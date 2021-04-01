@@ -1,6 +1,5 @@
 #include "main.h"
 #include "timer.h"
-#include "ball.h"
 #include "cell.h"
 #include "maze.h"
 #include "hud.h"
@@ -15,8 +14,6 @@ GLFWwindow *window;
 * Customizable functions *
 **************************/
 
-// // Ball ball1;
-// Cell board, board2;
 Maze maze;
 Hud hud;
 
@@ -72,27 +69,8 @@ void draw() {
     glm::mat4 MVP;  // MVP = Projection * View * Model
 
     // Scene render
-    // ball1.draw(VP);
-    // board.draw(VP);
-    // board2.draw(VP);
-
-    // glUseProgram (programID);
     maze.draw(VP);
     hud.draw(maze);
-//     glMatrixMode(GL_PROJECTION);
-// glLoadIdentity();
-
-// glMatrixMode(GL_MODELVIEW);
-// glLoadIdentity();
-
-// glPushMatrix();
-// glBegin(GL_QUADS);
-// glVertex3f(-0.5f,  0.5f, 0.0f);
-// glVertex3f(-0.5f, -0.5f, 0.0f);
-// glVertex3f( 0.5f, -0.5f, 0.0f);
-// glVertex3f( 0.5f,  0.5f, 0.0f);
-// glEnd();
-// glPopMatrix();
 
 }
 
@@ -155,8 +133,6 @@ void initGL(GLFWwindow *window, int width, int height) {
     /* Objects should be created before any other gl function and shaders */
     // Create the models
 
-    // ball1       = Ball(0, 0, COLOR_RED);
-    // board = Cell(0,0,1,0,1,1);
     maze = Maze(10);
     hud = Hud(5);
     target = glm::vec3(maze.player.position);
