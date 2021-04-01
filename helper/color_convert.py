@@ -22,7 +22,20 @@ msg_orange = [226, 159, 24]
 col = [29, 131, 72]
 col = [ 25, 111, 61]
 
-color = col
-for c in color:
-    k = round(c/255, 5)
-    print("{}f, ".format(k), end="")
+blue_s1 = [52, 152, 219]
+blue_s2 = [133, 193, 233]
+
+orange_s1 = [230, 126, 34]
+orange_s2 = [229, 152, 102]
+
+def getCol(col):
+    color = col
+    for c in color:
+        k = round(c/255, 5)
+        print("{}f, ".format(k), end="")
+    print()
+
+getCol(blue_s1)
+getCol(blue_s2)
+getCol(orange_s1)
+getCol(orange_s2)
