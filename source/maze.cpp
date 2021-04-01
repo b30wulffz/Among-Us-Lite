@@ -54,7 +54,7 @@ void kruskal(map<pair<int, int>, vector<pair<int, int>>>  &graph, int vertex_cou
 
 int Maze::getTimeLeft(){
     if(!this->isGameOver){
-        int cutoff = 50;
+        int cutoff = 90;
         int timeLeft = cutoff - (int)this->gameTimer.getSec();
         return timeLeft;
     }
@@ -216,13 +216,21 @@ void Maze::tick_input(GLFWwindow *window) {
         this->isGameOver = true;
     }
 
+    if(this->blindMode){
+        this->scoreMultiplier = ((int)this->blindTimer.getSec() / 2) + 1;
+    }
+
     if(glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS){
-        this->blindMode = true;
-        this->scoreMultiplier = 3;
+        if(!this->blindMode){
+            this->blindMode = true;
+            this->blindTimer.init();
+        }
     }    
     if(glfwGetKey(window, GLFW_KEY_V) == GLFW_PRESS){
-        this->blindMode = false;
-        this->scoreMultiplier = 1;
+        if(this->blindMode){
+            this->blindMode = false;
+            this->scoreMultiplier = 1;
+        }
     }
 
     if(this->imposter.health > 0 && !this->isGameOver){

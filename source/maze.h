@@ -26,6 +26,7 @@ class Maze {
         int scoreMultiplier;
         bool blindMode;
         Clocktime gameTimer;
+        Clocktime blindTimer;
         int getTimeLeft();
         bool gameOverStatus;
         bool isGameOver;
