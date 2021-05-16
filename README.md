@@ -2,6 +2,8 @@
 
 This is an OpenGL based 2D game inspired from the amazing Among Us game. The challenge for you is to find the exit of the maze within a limited time frame. You will be allowed to exit only when you complete all the tasks. There is a imposter hunting for you in the game. Hence you need to escape away from the imposter and kill him in order to survive. Turning lights off(poor visibility), collecting coins, and avoiding bomb, yes there is a lot of stuff waiting for you. So why not give this a try!
 
+Demo Video: [Click Here](https://www.youtube.com/watch?v=EJL58oko-hM&ab_channel=ShlokPandey)
+
 <p align="center" width="100%">
     <img src="./readme_assets/demo.gif" alt="gameplay"> 
 </p>
